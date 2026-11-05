@@ -152,11 +152,11 @@ section + section { border-top: 1px solid var(--line); }
 /* About */
 .about-grid { display: grid; gap: 48px; }
 @media (min-width: 700px) {
-  .about-grid { grid-template-columns: 13rem minmax(0, 1fr); gap: 40px 48px; align-items: start; }
+  .about-grid { grid-template-columns: 16rem minmax(0, 1fr); gap: 40px 48px; align-items: start; }
   .about-text { grid-column: 1 / -1; }
 }
 @media (min-width: 1100px) {
-  .about-grid { grid-template-columns: minmax(0, 1fr) 13rem 15rem; gap: 56px; }
+  .about-grid { grid-template-columns: minmax(0, 1fr) 16.5rem 15rem; gap: 56px; }
   .about-text { grid-column: auto; }
 }
 .about-text { max-width: var(--measure); }
@@ -282,7 +282,7 @@ section + section { border-top: 1px solid var(--line); }
 
 /* About: text, portrait and facts side by side, top-aligned */
 .portrait {
-  display: block; width: 100%; max-width: 15rem; height: auto; aspect-ratio: 5 / 6; object-fit: cover;
+  display: block; width: 100%; max-width: 16.5rem; height: auto; aspect-ratio: 5 / 6; object-fit: cover;
   border-radius: 14px; box-shadow: 0 0 0 1px var(--line);
 }
 
