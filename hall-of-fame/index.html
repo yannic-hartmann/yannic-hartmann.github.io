@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en" data-title-en="Molecule Hall of Fame | Yannic Hartmann" data-title-de="Molekül-Hall-of-Fame | Yannic Hartmann">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Molecule Hall of Fame | Yannic Hartmann</title>
+<meta name="description" content="Crystal structures of molecules synthesised by Yannic Hartmann, shown as rotating 3D models.">
+<meta name="theme-color" content="#0e1029">
+<link rel="canonical" href="https://yannic-hartmann.github.io/hall-of-fame/">
+<meta property="og:title" content="Molecule Hall of Fame | Yannic Hartmann">
+<meta property="og:description" content="Crystal structures of molecules I have synthesised, as rotating 3D models.">
+<meta property="og:image" content="https://yannic-hartmann.github.io/assets/og-image.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2312142e'/%3E%3Cpath d='M16 7l7.8 4.5v9L16 25l-7.8-4.5v-9z' fill='none' stroke='%23a3a5cb' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='3.4' fill='%23e58cff'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+  html, body { height: 100%; }
+  body {
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 70% 60% at 50% 38%, #1f2357 0%, #151839 45%, #0e1029 100%);
+  }
+  .stage { position: fixed; inset: 0; }
+  #view { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; }
+  #view:active { cursor: grabbing; }
+
+  /* spotlight from above */
+  .beam {
+    position: absolute; left: 50%; top: -4vh; width: min(92vw, 980px); height: 78vh;
+    transform: translateX(-50%); pointer-events: none;
+    clip-path: polygon(43% 0, 57% 0, 100% 100%, 0 100%);
+    background: linear-gradient(to bottom, rgba(229, 140, 255, 0.20), rgba(229, 140, 255, 0.05) 62%, rgba(229, 140, 255, 0) 92%);
+    filter: blur(10px);
+  }
+  .vignette { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 85% 75% at 50% 45%, transparent 55%, rgba(6, 7, 20, 0.65) 100%); }
+
+  /* top bar */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 5;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding: max(16px, env(safe-area-inset-top)) clamp(16px, 3vw, 32px) 0;
+  }
+  .back { display: inline-flex; align-items: center; gap: 10px; font: 600 0.9375rem/1 var(--display); color: var(--muted); text-decoration: none; padding: 10px 0; }
+  .back:hover { color: var(--ink); }
+  .back svg { width: 18px; height: 18px; }
+  .hof-title { font: 600 0.9375rem/1 var(--display); color: var(--muted); letter-spacing: 0.01em; }
+  @media (max-width: 640px) { .hof-title { display: none; } }
+
+  /* caption */
+  .caption {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 4;
+    padding: 0 clamp(16px, 4vw, 40px) max(28px, calc(env(safe-area-inset-bottom) + 18px));
+    text-align: center; pointer-events: none;
+  }
+  .caption > * { pointer-events: auto; position: relative; }
+  .caption::before { content: ""; position: absolute; inset: -60px 0 0; background: linear-gradient(to bottom, rgba(14,16,41,0), rgba(14,16,41,.78) 45%, rgba(14,16,41,.92)); pointer-events: none; }
+  .count { font: 600 0.875rem/1 var(--display); color: var(--muted); margin-bottom: 14px; font-variant-numeric: tabular-nums; }
+  .mol-name { font-family: var(--display); font-weight: 750; font-size: clamp(1.875rem, 5vw, 3.5rem); letter-spacing: -0.03em; line-height: 1.02; margin: 0 0 12px; font-variation-settings: "opsz" 96; }
+  .mol-name sup { font-size: 0.5em; line-height: 0; letter-spacing: 0; }
+  .mol-ref { font-size: clamp(0.9375rem, 1.6vw, 1.0625rem); color: var(--muted); margin: 0 auto 10px; max-width: 40rem; }
+  .mol-ref a { color: var(--ink); text-decoration-color: color-mix(in srgb, var(--radical) 55%, transparent); }
+  .mol-note { font-size: 0.875rem; color: var(--muted); margin: 0 auto; max-width: 34rem; display: inline-flex; gap: 10px; align-items: baseline; }
+  .mol-note::before { content: ""; flex: none; width: 18px; height: 3px; border-radius: 2px; background: var(--radical); box-shadow: 0 0 8px var(--radical); transform: translateY(-3px); }
+  .mol-note:empty { display: none; }
+  .caption.swap .mol-name, .caption.swap .mol-ref, .caption.swap .mol-note { opacity: 0; transform: translateY(8px); }
+  .mol-name, .mol-ref, .mol-note { transition: opacity .35s ease, transform .35s ease; }
+
+  /* side arrows (shown once there are two or more molecules) */
+  .arrow {
+    position: fixed; top: 44%; z-index: 5; width: 64px; height: 64px; border-radius: 50%;
+    display: grid; place-items: center; cursor: pointer;
+    background: color-mix(in srgb, #0e1029 60%, transparent); color: var(--ink);
+    border: 1px solid color-mix(in srgb, var(--radical) 40%, transparent);
+    transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+  }
+  .arrow:hover { border-color: var(--radical); box-shadow: 0 0 24px -4px var(--radical); transform: scale(1.06); }
+  .arrow svg { width: 26px; height: 26px; }
+  .arrow.prev { left: clamp(12px, 4vw, 56px); }
+  .arrow.next { right: clamp(12px, 4vw, 56px); }
+  .arrow.next svg { transform: scaleX(-1); }
+  .arrow[hidden] { display: none; }
+  @media (max-width: 640px) { .arrow { width: 48px; height: 48px; top: auto; bottom: 150px; } }
+
+  /* tools */
+  .tools { position: fixed; right: clamp(16px, 3vw, 32px); bottom: max(28px, calc(env(safe-area-inset-bottom) + 18px)); z-index: 5; display: flex; gap: 8px; }
+  .tool {
+    font: 600 0.8125rem/1 var(--display); color: var(--muted); background: transparent;
+    border: 1px solid var(--line); border-radius: 999px; padding: 9px 13px; cursor: pointer;
+  }
+  .tool:hover { color: var(--ink); border-color: var(--muted); }
+  .tool[aria-pressed="true"] { color: var(--ink); border-color: var(--radical); }
+  .drag-hint { margin: 0; position: fixed; left: clamp(16px, 3vw, 32px); bottom: max(28px, calc(env(safe-area-inset-bottom) + 18px)); z-index: 5; font-size: 0.8125rem; color: var(--muted); }
+  @media (max-width: 900px) { .drag-hint { display: none; } .tools { top: calc(max(16px, env(safe-area-inset-top)) + 54px); bottom: auto; right: auto; left: 50%; transform: translateX(-50%); } }
+  .loading { position: fixed; inset: 0; display: grid; place-items: center; color: var(--muted); font: 600 0.9375rem/1 var(--display); pointer-events: none; transition: opacity .4s ease; }
+  .loading.done { opacity: 0; }
+</style>
+<script type="importmap">
+{ "imports": { "three": "../assets/vendor/three.module.min.js" } }
+</script>
+</head>
+<body>
+<div class="stage" aria-hidden="true">
+  <div class="beam"></div>
+  <canvas id="view"></canvas>
+  <div class="vignette"></div>
+</div>
+<div class="loading" id="loading" data-i18n="loading">Loading structure</div>
+
+<header class="topbar">
+  <a class="back" href="../#publications">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span data-i18n="back">Back to the website</span>
+  </a>
+  <span class="hof-title" data-i18n="title">Molecule Hall of Fame</span>
+  <button class="lang" type="button" id="lang-toggle" aria-label="Auf Deutsch wechseln" lang="de">Deutsch</button>
+</header>
+
+<main class="caption" id="caption" aria-live="polite">
+  <p class="count" id="count">1 / 1</p>
+  <h1 class="mol-name" id="name"></h1>
+  <p class="mol-ref" id="ref"></p>
+  <p class="mol-note" id="note"></p>
+</main>
+
+<button class="arrow prev" id="prev" type="button" data-i18n-aria="prev" aria-label="Previous molecule" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+<button class="arrow next" id="next" type="button" data-i18n-aria="next" aria-label="Next molecule" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+
+<p class="drag-hint" data-i18n="hint">Drag to rotate</p>
+<div class="tools">
+  <button class="tool" type="button" id="toggle-h" aria-pressed="false" data-i18n="hydrogens">Hydrogens</button>
+</div>
+
+<script type="module">
+import * as THREE from "three";
+import { RoomEnvironment } from "../assets/vendor/RoomEnvironment.js";
+
+/* ---------------- Collection: add new molecules here ---------------- */
+const MOLECULES = [
+  {
+    file: "data/tri4.json",
+    name: { en: "Tetrahedral Tri<sup>4</sup> cage <b>N<sup>4</sup></b>", de: "Tetraedrischer Tri<sup>4</sup>-Käfig <b>N<sup>4</sup></b>" },
+    ref: '<a href="https://doi.org/10.1002/anie.7638565" target="_blank" rel="noopener"><i>Angew. Chem. Int. Ed.</i> <b>2026</b>, <i>65</i>, e7638565</a>',
+    note: {
+      en: "Single-crystal X-ray structure. The glowing bonds are the six reversible C–C bonds formed by radical recombination.",
+      de: "Einkristallstruktur. Die leuchtenden Bindungen sind die sechs reversiblen C–C-Bindungen aus der Radikalrekombination."
+    }
+  }
+];
+
+/* ---------------- Language ---------------- */
+const STR = {
+  en: { back: "Back to the website", title: "Molecule Hall of Fame", hint: "Drag to rotate", hydrogens: "Hydrogens", loading: "Loading structure", prev: "Previous molecule", next: "Next molecule" },
+  de: { back: "Zurück zur Website", title: "Molekül-Hall-of-Fame", hint: "Zum Drehen ziehen", hydrogens: "Wasserstoffe", loading: "Struktur wird geladen", prev: "Vorheriges Molekül", next: "Nächstes Molekül" }
+};
+const root = document.documentElement;
+let lang = "en";
+try { const s = localStorage.getItem("lang"); if (s === "de" || s === "en") lang = s; } catch (e) {}
+const q = new URLSearchParams(location.search).get("lang"); if (q === "de" || q === "en") lang = q;
+const langBtn = document.getElementById("lang-toggle");
+function applyLang() {
+  root.lang = lang;
+  document.title = root.getAttribute("data-title-" + lang);
+  document.querySelectorAll("[data-i18n]").forEach(n => { n.textContent = STR[lang][n.dataset.i18n]; });
+  document.querySelectorAll("[data-i18n-aria]").forEach(n => { n.setAttribute("aria-label", STR[lang][n.dataset.i18nAria]); });
+  langBtn.textContent = lang === "de" ? "English" : "Deutsch";
+  langBtn.setAttribute("lang", lang === "de" ? "en" : "de");
+  langBtn.setAttribute("aria-label", lang === "de" ? "Switch to English" : "Auf Deutsch wechseln");
+  if (current >= 0) fillCaption(MOLECULES[current]);
+  try { localStorage.setItem("lang", lang); } catch (e) {}
+}
+langBtn.addEventListener("click", () => { lang = lang === "de" ? "en" : "de"; applyLang(); });
+
+/* ---------------- Scene ---------------- */
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const canvas = document.getElementById("view");
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(2, devicePixelRatio || 1));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+const scene = new THREE.Scene();
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+scene.environmentIntensity = 0.55;
+
+const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 500);
+const key = new THREE.DirectionalLight(0xffffff, 2.2); key.position.set(4, 14, 8); scene.add(key);
+const rim = new THREE.DirectionalLight(0xe58cff, 2.4); rim.position.set(-8, 4, -10); scene.add(rim);
+const fill = new THREE.DirectionalLight(0x7f8cff, 0.7); fill.position.set(10, -2, 6); scene.add(fill);
+scene.add(new THREE.AmbientLight(0x9aa0ff, 0.25));
+
+/* platform: hexagonal plinth with a glowing hex ring */
+const RADICAL = new THREE.Color(0xe58cff);
+const platform = new THREE.Group(); scene.add(platform);
+const plinth = new THREE.Mesh(
+  new THREE.CylinderGeometry(1, 1.04, 0.07, 6),
+  new THREE.MeshPhysicalMaterial({ color: 0x171a3d, roughness: 0.3, metalness: 0.4, clearcoat: 1, clearcoatRoughness: 0.2 })
+);
+platform.add(plinth);
+platform.scale.set(0.82, 1, 0.82);
+const ringMat = new THREE.MeshBasicMaterial({ color: RADICAL, transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
+const ring = new THREE.Mesh(new THREE.RingGeometry(0.97, 1.0, 6, 1), ringMat);
+ring.rotation.x = -Math.PI / 2; ring.position.y = 0.037; platform.add(ring);
+function glowTexture() {
+  const c = document.createElement("canvas"); c.width = c.height = 256;
+  const g = c.getContext("2d"), grd = g.createRadialGradient(128, 128, 0, 128, 128, 128);
+  grd.addColorStop(0, "rgba(229,140,255,0.55)"); grd.addColorStop(0.45, "rgba(229,140,255,0.16)"); grd.addColorStop(1, "rgba(229,140,255,0)");
+  g.fillStyle = grd; g.fillRect(0, 0, 256, 256);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+}
+const glowMat = new THREE.MeshBasicMaterial({ map: glowTexture(), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false });
+const glow = new THREE.Mesh(new THREE.PlaneGeometry(3.2, 3.2), glowMat);
+glow.rotation.x = -Math.PI / 2; glow.position.y = 0.04; platform.add(glow);
+
+/* drifting motes in the beam */
+const MOTES = 140, motePos = new Float32Array(MOTES * 3), moteSpeed = new Float32Array(MOTES);
+for (let i = 0; i < MOTES; i++) { motePos[i*3] = (Math.random()-0.5)*2.2; motePos[i*3+1] = Math.random()*2.4; motePos[i*3+2] = (Math.random()-0.5)*2.2; moteSpeed[i] = 0.0015 + Math.random()*0.003; }
+const moteGeo = new THREE.BufferGeometry(); moteGeo.setAttribute("position", new THREE.BufferAttribute(motePos, 3));
+const motes = new THREE.Points(moteGeo, new THREE.PointsMaterial({ color: 0xf3c9ff, size: 0.012, transparent: true, opacity: 0.55, blending: THREE.AdditiveBlending, depthWrite: false }));
+platform.add(motes);
+
+/* ---------------- Molecule builder ---------------- */
+const COLORS = { C: 0xd4d6ee, N: 0x6d8dff, H: 0xffffff, O: 0xff6b7a, S: 0xf2c94c, F: 0x7be0a4, Cl: 0x5fd18a, Br: 0xc4704a, B: 0xffb4b4, Si: 0xd9c7a0, P: 0xffa64d };
+const RADII = { H: 0.2, C: 0.34, N: 0.32, O: 0.32, S: 0.42, F: 0.3, Cl: 0.4, Br: 0.44 };
+const BOND_R = 0.12;
+const sphereGeo = new THREE.SphereGeometry(1, 32, 20);
+const cylGeo = new THREE.CylinderGeometry(1, 1, 1, 18, 1, true); cylGeo.translate(0, 0.5, 0);
+const mats = {};
+function mat(el) {
+  if (!mats[el]) mats[el] = new THREE.MeshPhysicalMaterial({ color: COLORS[el] || 0xcccccc, roughness: 0.3, metalness: 0.05, clearcoat: 0.9, clearcoatRoughness: 0.18 });
+  return mats[el];
+}
+const dynMat = new THREE.MeshBasicMaterial({ color: 0xec9dff });
+const haloMat = new THREE.MeshBasicMaterial({ color: RADICAL, transparent: true, opacity: 0.42, blending: THREE.AdditiveBlending, depthWrite: false });
+
+function build(data) {
+  const n = data.el.length, P = [];
+  for (let i = 0; i < n; i++) P.push(new THREE.Vector3(data.xyz[i*3], data.xyz[i*3+1], data.xyz[i*3+2]));
+  // bounding radius over heavy atoms
+  let r = 0; P.forEach((p, i) => { if (data.el[i] !== "H") r = Math.max(r, p.length()); });
+  const group = new THREE.Group(), hGroup = new THREE.Group();
+  group.add(hGroup);
+  const dyn = new Set(data.dyn || []);
+  const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), up = new THREE.Vector3(0, 1, 0), s = new THREE.Vector3(), v = new THREE.Vector3();
+
+  // atoms (instanced per element; hydrogens in their own group so they can be toggled)
+  const byEl = {};
+  data.el.forEach((e, i) => (byEl[e] = byEl[e] || []).push(i));
+  for (const e in byEl) {
+    const ids = byEl[e], mesh = new THREE.InstancedMesh(sphereGeo, mat(e), ids.length), rad = RADII[e] || 0.34;
+    ids.forEach((i, k) => { m4.compose(P[i], q.identity(), s.set(rad, rad, rad)); mesh.setMatrixAt(k, m4); });
+    (e === "H" ? hGroup : group).add(mesh);
+  }
+  // bonds: two half-cylinders, each coloured like its atom; the dynamic C–C bonds glow
+  const halves = {}, glowB = [];
+  data.bonds.forEach(([a, b], bi) => {
+    if (dyn.has(bi)) { glowB.push([a, b]); return; }
+    const mid = P[a].clone().add(P[b]).multiplyScalar(0.5);
+    const isH = data.el[a] === "H" || data.el[b] === "H";
+    [[a, mid], [b, mid]].forEach(([i, m]) => { const key = (isH ? "h:" : "") + data.el[i]; (halves[key] = halves[key] || []).push([P[i], m]); });
+  });
+  function cylinders(list, material, radius, parent) {
+    const mesh = new THREE.InstancedMesh(cylGeo, material, list.length);
+    list.forEach(([p0, p1], k) => {
+      v.subVectors(p1, p0); const len = v.length();
+      q.setFromUnitVectors(up, v.normalize());
+      m4.compose(p0, q, s.set(radius, len, radius)); mesh.setMatrixAt(k, m4);
+    });
+    parent.add(mesh);
+  }
+  for (const k in halves) {
+    const isH = k.startsWith("h:"), e = isH ? k.slice(2) : k;
+    cylinders(halves[k], mat(e), isH ? BOND_R * 0.75 : BOND_R, isH ? hGroup : group);
+  }
+  if (glowB.length) {
+    const seg = glowB.map(([a, b]) => [P[a], P[b]]);
+    cylinders(seg, dynMat, BOND_R * 1.5, group);
+    cylinders(seg, haloMat, BOND_R * 3.4, group);   // soft glow around the reversible bonds
+  }
+
+  hGroup.visible = showH;
+  // normalise size so every molecule fills the stage the same way
+  const scale = 1 / r;
+  const holder = new THREE.Group(); holder.add(group); group.scale.setScalar(scale);
+  holder.userData = { hGroup, spin: group };
+  return holder;
+}
+
+/* ---------------- Layout ---------------- */
+let W = 1, H = 1;
+const FLOAT_Y = 1.25;          // molecule centre above the plinth (in units of molecule radius)
+function resize() {
+  W = innerWidth; H = innerHeight;
+  renderer.setSize(W, H, false);
+  camera.aspect = W / H;
+  // fit a unit sphere (molecule) plus plinth; leave room for the caption below
+  const vFov = THREE.MathUtils.degToRad(camera.fov), hFov = 2 * Math.atan(Math.tan(vFov / 2) * camera.aspect);
+  const need = W < 700 ? 1.75 : 2.05, d = Math.max(need / Math.tan(vFov / 2), 1.35 / Math.tan(hFov / 2));
+  camera.position.set(0, FLOAT_Y + d * 0.13, d);
+  camera.lookAt(0, FLOAT_Y - (W < 700 ? 0.62 : 0.5), 0);
+  camera.updateProjectionMatrix();
+}
+addEventListener("resize", resize); resize();
+
+/* ---------------- Interaction ---------------- */
+let dragging = false, lastX = 0, lastY = 0, userYaw = 0, userPitch = 0, idleSince = 0, swipeX = 0;
+canvas.addEventListener("pointerdown", e => { dragging = true; lastX = swipeX = e.clientX; lastY = e.clientY; canvas.setPointerCapture(e.pointerId); });
+canvas.addEventListener("pointermove", e => {
+  if (!dragging) return;
+  userYaw += (e.clientX - lastX) * 0.008;
+  userPitch = THREE.MathUtils.clamp(userPitch + (e.clientY - lastY) * 0.005, -0.7, 0.7);
+  lastX = e.clientX; lastY = e.clientY; idleSince = performance.now();
+});
+canvas.addEventListener("pointerup", e => {
+  dragging = false; idleSince = performance.now();
+  if (e.pointerType !== "mouse" && MOLECULES.length > 1 && Math.abs(e.clientX - swipeX) > 90 && Math.abs(userPitch) < 0.2) go(e.clientX < swipeX ? 1 : -1);
+});
+addEventListener("keydown", e => {
+  if (e.key === "ArrowRight") go(1);
+  else if (e.key === "ArrowLeft") go(-1);
+});
+document.getElementById("prev").addEventListener("click", () => go(-1));
+document.getElementById("next").addEventListener("click", () => go(1));
+let showH = false;
+const hBtn = document.getElementById("toggle-h");
+hBtn.addEventListener("click", () => {
+  showH = !showH; hBtn.setAttribute("aria-pressed", String(showH));
+  if (stageMol) stageMol.userData.hGroup.visible = showH;
+});
+
+/* ---------------- Switching (vehicle-select style) ---------------- */
+const caption = document.getElementById("caption");
+const cache = {};
+let current = -1, stageMol = null, leaving = null, enterT = 1, leaveT = 1, dirSign = 1, pulse = 0;
+function fillCaption(m) {
+  document.getElementById("count").textContent = (current + 1) + " / " + MOLECULES.length;
+  document.getElementById("name").innerHTML = m.name[lang];
+  document.getElementById("ref").innerHTML = m.ref;
+  document.getElementById("note").textContent = m.note ? m.note[lang] : "";
+}
+async function load(i) {
+  if (!cache[i]) cache[i] = fetch(MOLECULES[i].file).then(r => r.json());
+  return cache[i];
+}
+async function go(step) {
+  if (MOLECULES.length < 2 && current >= 0) return;
+  const next = current < 0 ? 0 : (current + step + MOLECULES.length) % MOLECULES.length;
+  dirSign = step >= 0 ? 1 : -1;
+  const data = await load(next);
+  if (stageMol) { leaving = stageMol; leaveT = 0; }
+  current = next;
+  stageMol = build(data); scene.add(stageMol);
+  enterT = reduce ? 1 : 0; pulse = 1;
+  caption.classList.add("swap");
+  setTimeout(() => { fillCaption(MOLECULES[current]); caption.classList.remove("swap"); }, reduce ? 0 : 260);
+  document.getElementById("loading").classList.add("done");
+  load((current + 1) % MOLECULES.length);  // preload the next one
+}
+const ease = t => 1 - Math.pow(1 - t, 3);
+
+/* ---------------- Render loop ---------------- */
+let last = performance.now(), spin = 0;
+function frame(now) {
+  const dt = Math.min(0.05, (now - last) / 1000); last = now;
+  const t = now / 1000;
+  if (!reduce && !dragging && now - idleSince > 1200) spin += dt * 0.32;
+  if (!dragging) userPitch *= 0.96;
+
+  if (stageMol) {
+    enterT = Math.min(1, enterT + dt / 0.75);
+    const e = ease(enterT);
+    stageMol.position.set(dirSign * (1 - e) * 3.2, FLOAT_Y + (reduce ? 0 : Math.sin(t * 1.1) * 0.035) - (1 - e) * 0.3, 0);
+    stageMol.scale.setScalar(0.55 + 0.45 * e);
+    stageMol.userData.spin.rotation.set(userPitch, spin + userYaw + (1 - e) * dirSign * -1.4, 0);
+  }
+  if (leaving) {
+    leaveT = Math.min(1, leaveT + dt / 0.6);
+    const e = ease(leaveT);
+    leaving.position.x = -dirSign * e * 3.4;
+    leaving.scale.setScalar(Math.max(0.001, 1 - 0.5 * e));
+    if (leaveT >= 1) { scene.remove(leaving); leaving = null; }
+  }
+  // plinth turns slowly against the molecule; ring pulses when a new molecule arrives
+  platform.rotation.y = reduce ? 0 : -t * 0.12;
+  pulse = Math.max(0, pulse - dt * 1.4);
+  ringMat.opacity = 0.7 + 0.3 * Math.sin(t * 2) * (reduce ? 0 : 1) * 0.3 + pulse * 0.6;
+  ring.scale.setScalar(1 + pulse * 0.08);
+  glowMat.opacity = 0.8 + pulse * 0.6;
+  if (!reduce) {
+    for (let i = 0; i < MOTES; i++) { motePos[i*3+1] += moteSpeed[i]; if (motePos[i*3+1] > 2.6) motePos[i*3+1] = 0; }
+    moteGeo.attributes.position.needsUpdate = true;
+  }
+  renderer.render(scene, camera);
+  requestAnimationFrame(frame);
+}
+
+if (MOLECULES.length > 1) { document.getElementById("prev").hidden = false; document.getElementById("next").hidden = false; }
+applyLang();
+go(0).then(() => requestAnimationFrame(frame));
+</script>
+</body>
+</html>
