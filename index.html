@@ -10,6 +10,14 @@
 <meta property="og:title" content="Yannic Hartmann | Chemist">
 <meta property="og:description" content="Stimuli-responsive organic materials, macrocycles and porous cages built from reversible carbon–carbon bonds.">
 <meta name="theme-color" content="#12142e">
+<link rel="canonical" href="https://yannic-hartmann.github.io/">
+<meta property="og:url" content="https://yannic-hartmann.github.io/">
+<meta property="og:site_name" content="Yannic Hartmann">
+<meta property="og:image" content="https://yannic-hartmann.github.io/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Yannic Hartmann, doctoral researcher in supramolecular chemistry">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2312142e'/%3E%3Cpath d='M16 7l7.8 4.5v9L16 25l-7.8-4.5v-9z' fill='none' stroke='%23a3a5cb' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='3.4' fill='%23e58cff'/%3E%3C/svg%3E">
 <link rel="preload" href="assets/fonts/bricolage-grotesque.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/site.css">
@@ -20,6 +28,8 @@
   "@type": "Person",
   "name": "Yannic Hartmann",
   "jobTitle": "Doctoral researcher",
+  "url": "https://yannic-hartmann.github.io/",
+  "image": "https://yannic-hartmann.github.io/assets/img/portrait.webp",
   "email": "mailto:yannic.hartmann@hhu.de",
   "affiliation": { "@type": "CollegeOrUniversity", "name": "Heinrich Heine University Düsseldorf" },
   "alumniOf": [{ "@type": "CollegeOrUniversity", "name": "Heinrich Heine University Düsseldorf" }],
@@ -45,6 +55,7 @@
       <a href="#about" data-i18n="nav.about">About</a>
       <a href="#research" data-i18n="nav.research">Research</a>
       <a href="#publications" data-i18n="nav.pubs">Publications</a>
+      <a href="#artwork" data-i18n="nav.art">Artwork</a>
       <a href="#contact" data-i18n="nav.contact">Contact</a>
     </nav>
     <button class="lang" type="button" id="lang-toggle" aria-label="Auf Deutsch wechseln" lang="de">Deutsch</button>
@@ -80,12 +91,15 @@
           <p data-i18n="about.p2">In my PhD I develop novel organic materials through dynamic carbon–carbon bond formation, based on the reversible recombination of persistent radicals. Because these bonds can open and close again, the materials respond to external stimuli, a route towards a new generation of adaptive, stimuli-responsive materials.</p>
           <a class="btn-fill" href="cv/CV_Hartmann_Yannic.pdf" target="_blank" rel="noopener" data-i18n="about.cv">CV (PDF)</a>
         </div>
+        <div class="about-side">
+          <img class="portrait" src="assets/img/portrait.webp" width="300" height="449" alt="Portrait of Yannic Hartmann in the lab" loading="lazy" decoding="async">
         <dl class="facts">
           <div><dt data-i18n="facts.pos">Position</dt><dd data-i18n="facts.posV">Doctoral researcher</dd></div>
           <div><dt data-i18n="facts.group">Research group</dt><dd><a href="https://www.supramolekularechemie.hhu.de/en/" data-i18n="facts.groupV">Supramolecular Chemistry, Dr. Bernd M. Schmidt</a></dd></div>
           <div><dt data-i18n="facts.inst">Institution</dt><dd data-i18n="facts.instV">Heinrich Heine University Düsseldorf, Germany</dd></div>
           <div><dt data-i18n="facts.fund">Funding</dt><dd data-i18n="facts.fundV">Kekulé Fellowship, Fonds der Chemischen Industrie</dd></div>
         </dl>
+        </div>
       </div>
     </div>
   </section>
@@ -278,6 +292,32 @@
     </div>
   </section>
 
+  <section id="artwork">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 data-i18n="art.h">Artwork</h2>
+        <p data-i18n="art.intro">Scientific illustrations I have designed for journals.</p>
+      </div>
+      <div class="gallery" data-gallery aria-roledescription="carousel">
+        <div class="gallery-track">
+        <figure class="art">
+          <div class="art-img round"><img src="assets/art/2025-frontispiece-poc.webp" width="1200" height="1200" alt="Pixel-art frontispiece: a porous organic cage at the centre, surrounded by cage-COF, cage-MOF, cage-POP and cage-polymer materials" loading="lazy" decoding="async"></div>
+          <figcaption>
+            <span class="art-title" data-i18n="art.t1">Frontispiece</span>
+            <span class="art-ref"><a href="https://doi.org/10.1002/anie.202509618" target="_blank" rel="noopener"><i>Angew. Chem. Int. Ed.</i> <b>2025</b>, <i>64</i>, e202509618: Porous Organic Cages as Building Blocks for Framework Materials</a></span>
+            <span class="art-credit">© 2025 The Authors, Wiley-VCH, CC BY 4.0.</span>
+          </figcaption>
+        </figure>
+        </div>
+        <div class="gallery-nav" hidden>
+          <button type="button" class="gal-btn" data-dir="-1" data-i18n-aria="art.prev" aria-label="Previous artwork"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <div class="gal-dots"></div>
+          <button type="button" class="gal-btn next" data-dir="1" data-i18n-aria="art.next" aria-label="Next artwork"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section id="contact" class="contact">
     <div class="wrap">
       <div class="section-head">
@@ -310,6 +350,12 @@
     "nav.research": "Forschung",
     "nav.pubs": "Publikationen",
     "nav.contact": "Kontakt",
+    "nav.art": "Illustrationen",
+    "art.h": "Illustrationen",
+    "art.intro": "Wissenschaftliche Illustrationen, die ich für Fachzeitschriften gestaltet habe.",
+    "art.t1": "Frontispiz",
+    "art.prev": "Vorherige Illustration",
+    "art.next": "Nächste Illustration",
     "hero.role": "Doktorand in der Supramolekularen Chemie, Heinrich-Heine-Universität Düsseldorf",
     "hero.lead": "Ich entwickle stimuli-responsive organische Materialien aus Kohlenstoff–Kohlenstoff-Bindungen, die auf Kommando brechen und sich neu bilden – und baue daraus Makrozyklen, Käfige und mehr.",
     "hero.cta1": "Zu den Publikationen",
@@ -666,6 +712,44 @@
   window.addEventListener("resize", function () {
     clearTimeout(t);
     t = setTimeout(function () { resize(); if (reduce) draw(); }, 120);
+  });
+})();
+</script>
+<script>
+/* Artwork gallery: scroll-snap carousel. Arrows, dots and auto-advance only appear with two or more pieces. */
+(function () {
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  document.querySelectorAll("[data-gallery]").forEach(function (g) {
+    var track = g.querySelector(".gallery-track");
+    var slides = track.children;
+    if (slides.length < 2) return;
+    var nav = g.querySelector(".gallery-nav"), dotsBox = g.querySelector(".gal-dots");
+    nav.hidden = false;
+    var i = 0, timer = null, dots = [];
+    for (var k = 0; k < slides.length; k++) {
+      var d = document.createElement("button");
+      d.type = "button"; d.className = "gal-dot"; d.setAttribute("aria-label", "Artwork " + (k + 1));
+      d.addEventListener("click", (function (n) { return function () { go(n); }; })(k));
+      dotsBox.appendChild(d); dots.push(d);
+    }
+    function mark() { dots.forEach(function (d, n) { d.setAttribute("aria-current", n === i ? "true" : "false"); }); }
+    function go(n) {
+      i = (n + slides.length) % slides.length;
+      track.scrollTo({ left: slides[i].offsetLeft - track.offsetLeft, behavior: reduce ? "auto" : "smooth" });
+      mark();
+    }
+    g.querySelectorAll(".gal-btn").forEach(function (b) {
+      b.addEventListener("click", function () { go(i + Number(b.getAttribute("data-dir"))); });
+    });
+    track.addEventListener("scroll", function () {
+      var n = Math.round(track.scrollLeft / track.clientWidth);
+      if (n !== i) { i = n; mark(); }
+    }, { passive: true });
+    function start() { if (!reduce && !timer) timer = setInterval(function () { go(i + 1); }, 7000); }
+    function stop() { clearInterval(timer); timer = null; }
+    g.addEventListener("mouseenter", stop); g.addEventListener("mouseleave", start);
+    g.addEventListener("focusin", stop); g.addEventListener("focusout", start);
+    mark(); start();
   });
 })();
 </script>

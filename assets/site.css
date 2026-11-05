@@ -272,3 +272,41 @@ section + section { border-top: 1px solid var(--line); }
 /* Footer */
 .site-footer { border-top: 1px solid var(--line); padding: 32px 0 48px; color: var(--muted); font-size: 0.9375rem; }
 .site-footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; }
+
+/* About: portrait above the facts */
+.about-side { display: grid; gap: 28px; align-content: start; }
+.portrait {
+  display: block; width: min(100%, 240px); height: auto; aspect-ratio: 300 / 449; object-fit: cover;
+  border-radius: 16px; box-shadow: 0 0 0 1px var(--line);
+}
+
+/* Artwork gallery */
+.gallery-track {
+  display: grid; grid-auto-flow: column; grid-auto-columns: 100%;
+  overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+.gallery-track::-webkit-scrollbar { display: none; }
+.art { margin: 0; scroll-snap-align: start; display: grid; gap: 32px 64px; align-items: center; }
+@media (min-width: 860px) { .art { grid-template-columns: minmax(0, 27rem) minmax(0, 1fr); } }
+.art-img { max-width: 27rem; }
+.art-img img { display: block; width: 100%; height: auto; }
+.art-img.round img {
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px var(--line);
+}
+.art figcaption { display: grid; gap: 10px; max-width: 30rem; }
+.art-title { font-family: var(--display); font-weight: 650; font-size: clamp(1.5rem, 2.6vw, 2rem); letter-spacing: -0.02em; line-height: 1.15; }
+.art-ref { font-size: 1.0625rem; color: var(--muted); }
+.art-ref a { text-decoration-color: color-mix(in srgb, var(--radical) 55%, transparent); }
+.art-ref i, .art-ref b { color: var(--ink); }
+.art-credit { font-size: 0.8125rem; color: var(--muted); }
+.gallery-nav { display: flex; align-items: center; gap: 16px; margin-top: 32px; }
+.gallery-nav[hidden] { display: none; }
+.gal-btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); background: transparent; color: var(--ink); display: grid; place-items: center; cursor: pointer; }
+.gal-btn:hover { border-color: var(--muted); }
+.gal-btn svg { width: 20px; height: 20px; }
+.gal-btn.next svg { transform: scaleX(-1); }
+.gal-dots { display: flex; gap: 8px; }
+.gal-dot { width: 8px; height: 8px; padding: 0; border-radius: 50%; border: 0; background: var(--line); cursor: pointer; }
+.gal-dot[aria-current="true"] { background: var(--radical); box-shadow: 0 0 8px var(--radical); }
